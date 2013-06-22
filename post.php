@@ -80,6 +80,7 @@ if (isset($_POST['delete'])) {
 	$is_mod = isset($_POST['mod']) && $_POST['mod'];
 	$root = $is_mod ? $config['root'] . $config['file_mod'] . '?/' : $config['root'];
 	
+	if (!$is_mod) header('X-Associated-Content: "' . $root . $board['dir'] . $config['file_index'] . '"');
 	header('Location: ' . $root . $board['dir'] . $config['file_index'], true, $config['redirect_http']);
 
 } elseif (isset($_POST['report'])) {
@@ -137,6 +138,7 @@ if (isset($_POST['delete'])) {
 	$is_mod = isset($_POST['mod']) && $_POST['mod'];
 	$root = $is_mod ? $config['root'] . $config['file_mod'] . '?/' : $config['root'];
 	
+	if (!$is_mod) header('X-Associated-Content: "' . $root . $board['dir'] . $config['file_index'] . '"');
 	header('Location: ' . $root . $board['dir'] . $config['file_index'], true, $config['redirect_http']);
 } elseif (isset($_POST['post'])) {
 	
@@ -308,13 +310,21 @@ if (isset($_POST['delete'])) {
 		}
 	}
 	
-	// Check if thread is locked
-	// but allow mods to post
-	if (!$post['op'] && !hasPermission($config['mod']['postinlocked'], $board['uri'])) {
-		if ($thread['locked'])
+	if (!$post['op']) {
+		// Check if thread is locked
+		// but allow mods to post
+		if ($thread['locked'] && !hasPermission($config['mod']['postinlocked'], $board['uri']))
 			error($config['error']['locked']);
+		
+		$numposts = numPosts($post['thread']);
+		
+		if ($config['reply_hard_limit'] != 0 && $config['reply_hard_limit'] <= $numposts['replies'])
+			error($config['error']['reply_hard_limit']);
+		
+		if ($post['has_file'] && $config['image_hard_limit'] != 0 && $config['image_hard_limit'] <= $numposts['images'])
+			error($config['error']['image_hard_limit']);
 	}
-	
+		
 	if ($post['has_file']) {
 		$size = $_FILES['file']['size'];
 		if ($size > $config['max_filesize'])
@@ -642,7 +652,7 @@ if (isset($_POST['delete'])) {
 	
 	buildThread($post['op'] ? $id : $post['thread']);
 	
-	if (!$post['op'] && strtolower($post['email']) != 'sage' && !$thread['sage'] && ($config['reply_limit'] == 0 || numPosts($post['thread']) < $config['reply_limit'])) {
+	if (!$post['op'] && strtolower($post['email']) != 'sage' && !$thread['sage'] && ($config['reply_limit'] == 0 || $numposts['replies']+1 < $config['reply_limit'])) {
 		bumpThread($post['thread']);
 	}
 	
@@ -680,6 +690,7 @@ if (isset($_POST['delete'])) {
 			sprintf($config['file_page'], $post['op'] ? $id : $post['thread']) . (!$post['op'] ? '#' . $id : ''));
 	
 	rebuildThemes('post');
+	if (!$post['mod']) header('X-Associated-Content: "' . $redirect . '"');
 	header('Location: ' . $redirect, true, $config['redirect_http']);
 } else {
 	if (!file_exists($config['has_installed'])) {

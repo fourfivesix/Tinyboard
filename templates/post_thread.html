@@ -22,11 +22,22 @@
 		{% endif %}
 		{% if config.show_filename and post.filename %}
 			, 
-			{% if post.filename|length > config.max_filename_display %}
-				<span title="{{ post.filename }}">{{ post.filename|truncate(config.max_filename_display) }}</span>
-			{% else %}
-				{{ post.filename }}
+			{% if post.filename|length > config.max_filename_display %}
+				<span class="postfilename" title="{{ post.filename|bidi_cleanup }}">{{ post.filename|truncate(config.max_filename_display)|bidi_cleanup }}</span>
+			{% else %}
+				<span class="postfilename">{{ post.filename|bidi_cleanup }}</span>
+			{% endif %}
+		{% endif %}
+		{% if post.thumb != 'file' and config.image_identification %}
+			, 
+			<span class='image_id'>
+			 <a href="http://imgops.com/{{ config.domain }}{{ config.uri_img }}{{ post.file }}">io</a>
+			{% if post.file|extension == 'jpg' %}
+				 <a href="http://regex.info/exif.cgi?url={{ config.domain }}{{ config.uri_img }}{{ post.file }}">e</a>
 			{% endif %}
+			 <a href="http://www.google.com/searchbyimage?image_url={{ config.domain }}{{ config.uri_img }}{{ post.file }}">g</a>
+			 <a href="http://www.tineye.com/search?url={{ config.domain }}{{ config.uri_img }}{{ post.file }}">t</a>
+			</span>
 		{% endif %}
 		{% if post.thumb != 'file' and config.image_identification %}
 			, 
@@ -61,14 +72,14 @@
 	<label for="delete_{{ post.id }}">
 		{% if post.subject|length > 0 %}
 			{# show subject #}
-			<span class="subject">{{ post.subject }}</span> 
+			<span class="subject">{{ post.subject|bidi_cleanup }}</span> 
 		{% endif %}
 		{% if post.email|length > 0 %}
 			{# start email #}
 			<a class="email" href="mailto:{{ post.email }}">
 		{% endif %}
 		{% set capcode = post.capcode|capcode %}
-		<span {% if capcode.name %}style="{{ capcode.name }}" {% endif %}class="name">{{ post.name }}</span>
+		<span {% if capcode.name %}style="{{ capcode.name }}" {% endif %}class="name">{{ post.name|bidi_cleanup }}</span>
 		{% if post.trip|length > 0 %}
 			<span {% if capcode.trip %}style="{{ capcode.trip }}" {% endif %}class="trip">{{ post.trip }}</span>
 		{% endif %}

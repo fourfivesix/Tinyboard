@@ -45,7 +45,7 @@ $pages = array(
 	'/news/(\d+)'				=> 'news',		// view news
 	'/news/delete/(\d+)'			=> 'news_delete',	// delete from news
 	
-	'/edit/(\w+)'				=> 'edit_board',	// edit board details
+	'/edit/([\w+.]+)'				=> 'edit_board',	// edit board details
 	'/new-board'				=> 'new_board',		// create a new board
 	
 	'/rebuild'				=> 'rebuild',		// rebuild static files
@@ -105,7 +105,7 @@ $new_pages = array();
 foreach ($pages as $key => $callback) {
 	if (preg_match('/^secure /', $callback))
 		$key .= '(/(?P<token>[a-f0-9]{8}))?';
-	$new_pages[@$key[0] == '!' ? $key : "!^$key$!"] = $callback;
+	$new_pages[@$key[0] == '!' ? $key : '!^' . $key . '(?:&[^&=]+=[^&]*)*$!'] = $callback;
 }
 $pages = $new_pages;
 
