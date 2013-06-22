@@ -92,7 +92,9 @@ form table tr th {
 	padding: 4px;
 }
 form table tr th {
-	background: #D6F0E4;
+	background: #FF7800;
+        color: #FFFFFF;
+        font-weight: 800;
 }
 form table tr td div {
 	text-align: center;
@@ -115,7 +117,7 @@ p.fileinfo {
 	padding-right: 7em;
 }
 div.banner {
-	background-color: #E04000;
+	background-color: #9FF0CA;
 	font-size: 12pt;
 	font-weight: bold;
 	text-align: center;
@@ -206,12 +208,12 @@ div.post div.body {
 	white-space: pre-wrap;
 }
 div.post.reply {
-  background: #D6F0E4;
+	background: #D6F0E4;     
 	margin: 0.2em 16px;
 	padding: 0.2em 0.3em 0.5em 0.6em;
 	border-width: 1px;
 	border-style: none solid solid none;
-  border-color: #D6F0E4;
+	border-color: #D6F0E4;
 	display: inline-block;
 }
 span.trip {
@@ -309,11 +311,11 @@ fieldset label {
 }
 div.pages {
 	color: #89A;
-	background: #D6DAF0;
+	background: #D6F0E4;
 	display: inline;
 	padding: 8px;
-	border-right: 1px solid #B7C5D9;
-	border-bottom: 1px solid #B7C5D9;
+	border-right: 1px solid #C8E4D7;
+	border-bottom: 1px solid #C8E4D7;
 }
 div.pages a.selected {
 	color: black;
@@ -333,7 +335,7 @@ div.pages form input {
 }
 hr {
 	border: none;
-	border-top: 1px solid #B7C5D9;
+	border-top: 1px solid #C8E4D7;
 	height: 0;
 	clear: left;
 }
